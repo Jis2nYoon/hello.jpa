@@ -31,6 +31,15 @@ public class Main {
 			member.setTeamId(team.getId());
 			em.persist(member);
 			
+			//조회
+			Member findMember = em.find(Member.class, member.getId());
+			Long teamId = findMember.getTeamId();
+			//연관관계가 없음
+			Team findTeam = em.find(Team.class, teamId);
+			
+			
+			
+			
 			tx.commit();
 		} catch (Exception e){
 			tx.rollback();
