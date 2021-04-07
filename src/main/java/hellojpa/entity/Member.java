@@ -16,7 +16,7 @@ import javax.persistence.TemporalType;
 @Entity
 public class Member {
 	
-	@Id @GeneratedValue(strategy = GenerationType.AUTO)
+	@Id @GeneratedValue
 	private Long id;
 	
 	@Column(name="USERNAME")
@@ -24,17 +24,8 @@ public class Member {
 	
 	private int age;
 	
-	@Enumerated(EnumType.STRING)
-	private MemberType memberType;
-	
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date regDate;
-	
-	@Lob
-	private String lobString;
-	
-	@Lob
-	private byte[] lobByte;
+	@Column(name="TEAM_ID")
+	private Long teamId;
 
 	public Long getId() {
 		return id;
@@ -60,37 +51,15 @@ public class Member {
 		this.age = age;
 	}
 
-	public MemberType getMemberType() {
-		return memberType;
+	public Long getTeamId() {
+		return teamId;
 	}
 
-	public void setMemberType(MemberType memberType) {
-		this.memberType = memberType;
+	public void setTeamId(Long teamId) {
+		this.teamId = teamId;
 	}
-
-	public Date getRegDate() {
-		return regDate;
-	}
-
-	public void setRegDate(Date regDate) {
-		this.regDate = regDate;
-	}
-
-	public String getLobString() {
-		return lobString;
-	}
-
-	public void setLobString(String lobString) {
-		this.lobString = lobString;
-	}
-
-	public byte[] getLobByte() {
-		return lobByte;
-	}
-
-	public void setLobByte(byte[] lobByte) {
-		this.lobByte = lobByte;
-	}
+	
+	
 	
 	
 }

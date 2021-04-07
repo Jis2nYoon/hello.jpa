@@ -20,13 +20,15 @@ public class Main {
 		tx.begin();
 		
 		try {
-			//등록
-			Member member = new Member();
-//			member.setId(1L);
-			member.setAge(28);
-			member.setName("안녕하세요");
-			member.setMemberType(MemberType.ADMIN);
+			//팀 저장
+			Team team = new Team();
+			team.setName("TeamA");
+			em.persist(team);
 			
+			//회원 저장
+			Member member = new Member();
+			member.setName("member1");
+			member.setTeamId(team.getId());
 			em.persist(member);
 			
 			tx.commit();
