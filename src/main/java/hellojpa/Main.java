@@ -31,6 +31,9 @@ public class Main {
 			member.setTeam(team); //단방향 연관관계 설정, 참조 저장
 			em.persist(member);
 			
+			em.flush();//db에 쿼리를 다 보내버림
+			em.clear();//캐시를 다 비워버림
+			
 			//조회
 			Member findMember = em.find(Member.class, member.getId());
 			

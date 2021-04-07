@@ -2,6 +2,7 @@ package hellojpa.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -18,7 +19,9 @@ public class Member {
 	
 	private int age;
 	
-	@ManyToOne
+	
+	//fetch = FetchType.LAZY 로 해주면 JOIN 안하고 member만 조회함. team 사용하는 시점에서 team 조회함, 지연로딩!!(현업에서권장하는방법)
+	@ManyToOne(fetch = FetchType.LAZY) 
 	@JoinColumn(name="TEAM_ID")
 	private Team team;
 
