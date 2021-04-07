@@ -1,17 +1,11 @@
 package hellojpa.entity;
 
-import java.util.Date;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Lob;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class Member {
@@ -24,8 +18,9 @@ public class Member {
 	
 	private int age;
 	
-	@Column(name="TEAM_ID")
-	private Long teamId;
+	@ManyToOne
+	@JoinColumn(name="TEAM_ID")
+	private Team team;
 
 	public Long getId() {
 		return id;
@@ -51,15 +46,13 @@ public class Member {
 		this.age = age;
 	}
 
-	public Long getTeamId() {
-		return teamId;
+	public Team getTeam() {
+		return team;
 	}
 
-	public void setTeamId(Long teamId) {
-		this.teamId = teamId;
+	public void setTeam(Team team) {
+		this.team = team;
 	}
-	
-	
 	
 	
 }

@@ -28,14 +28,14 @@ public class Main {
 			//회원 저장
 			Member member = new Member();
 			member.setName("member1");
-			member.setTeamId(team.getId());
+			member.setTeam(team); //단방향 연관관계 설정, 참조 저장
 			em.persist(member);
 			
 			//조회
 			Member findMember = em.find(Member.class, member.getId());
-			Long teamId = findMember.getTeamId();
-			//연관관계가 없음
-			Team findTeam = em.find(Team.class, teamId);
+			
+			// 참조를 사용해서 연관관계 조회
+			Team findTeam = findMember.getTeam();
 			
 			
 			
