@@ -24,23 +24,33 @@ public class Main {
 		tx.begin(); // [트랜잭션] 시작 
 		
 		try {
-			Member memberA = new Member();
-			memberA.setName("memberA");
-			Member memberB = new Member();
-			memberA.setName("memberB");
-			Member memberC = new Member();
-			memberA.setName("memberC");
-			em.persist(memberA);
-			em.persist(memberB);
-			em.persist(memberC);
+			/**
+			 * JPQL
+			 * 테이블이 아닌 객체를 대상으로 검색하는 객체 지향 쿼리
+			 * SQL을 추상화해서 특정 데이터베이스 SQL에 의존X
+			 * 객체 지향 SQL
+			 * ##from절에 들어가는게 객체라는것.
+			 * ##엔티티와 속성은 대소문자 구분, 별칭 필수
+			 */
+			String jpql = "select m from Member m where m.name like '%hello%'";
+			List<Member> result = em.createQuery(jpql, Member.class).getResultList();//getSingleResult()
+			String usernameParam = "param";
+			// 네임으로 파라미터 바인딩
+			String jpql1 = "select m From Member m where m.name=:username";
+			em.createQuery(jpql1, Member.class).setParameter("username", usernameParam);
+			// 순서로 파라미터 바인딩
+			String jpql2 = "select m From Member m where m.name=?1";
+			em.createQuery(jpql2, Member.class).setParameter(1, usernameParam);
+			//프로젝션
+			//select m from Member m -> 엔티티 프로젝션
+			//select m.team from Member m -> 엔티티 프로젝션
+			//select username, age from Member m -> 단순 값 프로젝션
 			
-			em.flush();
+			//new 명령어: 단순 값을 DTO로 바로 조회
+			//select ne jpabook.jpql.UserDTO(m.name,m.age) from Member m
 			
-			em.detach(memberA); //특정 엔티티만 준영속 상태로 전환
-			//em.clear(); // 준영속 상태
-			//em.close(); // 영속성 컨텍스트를 종료
+			//DISTINCT는 중복 제거
 			
-			memberA.setName("memberAA");
 			
 			tx.commit(); // [트랜잭션] 커밋
 		} catch (Exception e){
