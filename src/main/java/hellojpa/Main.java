@@ -53,8 +53,6 @@ public class Main {
 				System.out.println("member1 = " + member1.toString());
 			}
 			
-			//만약 쓰기 지연을 했다면 여기까지 SQL을 데이터베이스에 보내지 않는다. 
-			// 커밋하는 순간 데이터베이스에 SQL를 보낸다.
 			tx.commit();
 		} catch (Exception e){
 			tx.rollback();
