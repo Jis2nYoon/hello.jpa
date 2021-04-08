@@ -35,24 +35,8 @@ public class Main {
 			em.persist(member); //엔티티를 영속
 			member.setTeam(team);
 			
-			//1차 캐시에서 조회 (글로벌 캐시가 아님. 쓰레드 안에서만 유지)
-			Member findMember = em.find(Member.class, member.getId());
-			//캐시에 없으니 디비에서 조회
-			Member findMember2 = em.find(Member.class, "member2");
-			Member findMember22 = em.find(Member.class, "member2");
-			
-			System.out.println(findMember2 == findMember22); // 동일성 비교 true
-			
-			// 참조를 사용해서 연관관계 조회
-			Team findTeam = findMember.getTeam();
-			
-			findTeam.getName();
-			
-			List<Member> members = findTeam.getMembers();
-			for(Member member1 : members) {
-				System.out.println("member1 = " + member1.toString());
-			}
-			
+			// 만약 쓰기 지연을 했다면 여기까지 INSERT SQL을 데이터베이스에 보내지 않는다. 
+			// 커밋하는 순간 데이터베이스에 INSERT SQL를 보낸다.
 			tx.commit();
 		} catch (Exception e){
 			tx.rollback();
