@@ -19,7 +19,8 @@ public class Main {
 		
 		EntityManager em = emf.createEntityManager();
 		EntityTransaction tx = em.getTransaction();
-		tx.begin();
+		//엔티티 매니저는 데이터 변경시 트랜잭션을 시작해야 한다.
+		tx.begin(); // [트랜잭션] 시작 
 		
 		try {
 			//팀 저장
@@ -28,20 +29,19 @@ public class Main {
 			em.persist(team);
 			
 			//회원 저장
-			Member member = new Member();
+			Member member = new Member(); //엔티티를 생성한 상태(비영속)
 			member.setName("member1");
-//			member.setTeam(team); //단방향 연관관계 설정, 참조 저장
-			em.persist(member);
-			//역방향(주인이 아닌 방향)만 연관관계 설정
-			team.getMembers().add(member);//자주 저지르는 실수 member.setTeam(team);을 해야하는데 반대로 set하는 경우
-			//정방향(주인인 방향)
+			//1차 캐시에 저장됨
+			em.persist(member); //엔티티를 영속
 			member.setTeam(team);
 			
-			em.flush();//db에 쿼리를 다 보내버림
-			em.clear();//캐시를 다 비워버림
-			
-			//조회
+			//1차 캐시에서 조회 (글로벌 캐시가 아님. 쓰레드 안에서만 유지)
 			Member findMember = em.find(Member.class, member.getId());
+			//캐시에 없으니 디비에서 조회
+			Member findMember2 = em.find(Member.class, "member2");
+			Member findMember22 = em.find(Member.class, "member2");
+			
+			System.out.println(findMember2 == findMember22); // 동일성 비교 true
 			
 			// 참조를 사용해서 연관관계 조회
 			Team findTeam = findMember.getTeam();
@@ -53,7 +53,8 @@ public class Main {
 				System.out.println("member1 = " + member1.toString());
 			}
 			
-			
+			//만약 쓰기 지연을 했다면 여기까지 SQL을 데이터베이스에 보내지 않는다. 
+			// 커밋하는 순간 데이터베이스에 SQL를 보낸다.
 			tx.commit();
 		} catch (Exception e){
 			tx.rollback();
