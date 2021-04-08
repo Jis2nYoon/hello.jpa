@@ -6,6 +6,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
+import javax.persistence.TypedQuery;
 
 import hellojpa.entity.Member;
 import hellojpa.entity.MemberType;
@@ -23,15 +24,23 @@ public class Main {
 		tx.begin(); // [트랜잭션] 시작 
 		
 		try {
-			// 영속 엔티티 조회
-			Member memberA = em.find(Member.class, "memberA");
+			Member memberA = new Member();
+			memberA.setName("memberA");
+			Member memberB = new Member();
+			memberA.setName("memberB");
+			Member memberC = new Member();
+			memberA.setName("memberC");
+			em.persist(memberA);
+			em.persist(memberB);
+			em.persist(memberC);
 			
-			//영속 엔티티 데이터 수정
-			memberA.setName("hi");
-			memberA.setAge(10);
-			
-			//em.update(member) 이런 코드가 있어야 하지 않을까? 하겠지만 없어도 자동으로 update쿼리가 나간다.
-			// 영속 컨텍스트(entityManager)에서 관리되는(캐시되는) 것들은 변경이 감지된다.
+			//JPQL 쿼리 실행시 플러시가 자동으로 호출되는 이유
+			// 중간에 JPQL 실행  이건 JPA가 제공하는 것이라 문제가 없음. BUT Mybatis, springJDBC 템플릿 같은걸 섞어 쓴다면 직접 flush를 해줘야한다.
+			// 플러시는 영속성 컨텍스트를 비우는게 아니다, db와 동기화 하는 것임.
+			TypedQuery<Member> query = em.createQuery("select m from Member m", Member.class);
+			List<Member> members = query.getResultList();
+
+			em.remove(memberA); //엔티티 삭제
 			
 			tx.commit(); // [트랜잭션] 커밋
 		} catch (Exception e){
