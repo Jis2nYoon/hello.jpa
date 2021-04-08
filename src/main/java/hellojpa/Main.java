@@ -23,21 +23,17 @@ public class Main {
 		tx.begin(); // [트랜잭션] 시작 
 		
 		try {
-			//팀 저장
-			Team team = new Team();
-			team.setName("TeamA");
-			em.persist(team);
+			// 영속 엔티티 조회
+			Member memberA = em.find(Member.class, "memberA");
 			
-			//회원 저장
-			Member member = new Member(); //엔티티를 생성한 상태(비영속)
-			member.setName("member1");
-			//1차 캐시에 저장됨
-			em.persist(member); //엔티티를 영속
-			member.setTeam(team);
+			//영속 엔티티 데이터 수정
+			memberA.setName("hi");
+			memberA.setAge(10);
 			
-			// 만약 쓰기 지연을 했다면 여기까지 INSERT SQL을 데이터베이스에 보내지 않는다. 
-			// 커밋하는 순간 데이터베이스에 INSERT SQL를 보낸다.
-			tx.commit();
+			//em.update(member) 이런 코드가 있어야 하지 않을까? 하겠지만 없어도 자동으로 update쿼리가 나간다.
+			// 영속 컨텍스트(entityManager)에서 관리되는(캐시되는) 것들은 변경이 감지된다.
+			
+			tx.commit(); // [트랜잭션] 커밋
 		} catch (Exception e){
 			tx.rollback();
 			System.out.println("error!" + e);
