@@ -30,8 +30,12 @@ public class Main {
 			//회원 저장
 			Member member = new Member();
 			member.setName("member1");
-			member.setTeam(team); //단방향 연관관계 설정, 참조 저장
+//			member.setTeam(team); //단방향 연관관계 설정, 참조 저장
 			em.persist(member);
+			//역방향(주인이 아닌 방향)만 연관관계 설정
+			team.getMembers().add(member);//자주 저지르는 실수 member.setTeam(team);을 해야하는데 반대로 set하는 경우
+			//정방향(주인인 방향)
+			member.setTeam(team);
 			
 			em.flush();//db에 쿼리를 다 보내버림
 			em.clear();//캐시를 다 비워버림

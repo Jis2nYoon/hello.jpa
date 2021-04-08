@@ -15,6 +15,10 @@ public class Team {
 	private Long id;
 	private String name;
 	
+	
+	/**
+	 * 양방향 매핑, team이 양방향 매핑의 주인
+	 */
 	@OneToMany(mappedBy = "team")
 	List<Member> members = new ArrayList<Member>();
 	
